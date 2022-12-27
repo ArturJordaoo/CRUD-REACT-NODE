@@ -59,7 +59,7 @@ app.put('/update', (req, res) => {
 		},
 	)
 })
-/* app.delete('/delete/:id', (req, res) => {
+app.delete('/delete/:id', (req, res) => {
 	let id = req.params.id
 	db.query('DELETE FROM funcionario WHERE id = ?', id, (err, result) => {
 		if (err) {
@@ -68,7 +68,8 @@ app.put('/update', (req, res) => {
 			res.send(result)
 		}
 	})
-}) */
+}) 
+
 
 app.listen(3001, () => {
 	console.log('listening on port 3001')

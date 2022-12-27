@@ -35,26 +35,19 @@ function App() {
 		})
 	}
 	const updateFuncNome = (id) => {
-		Axios.put('http://localhost:3001/update', { nome: novoNome, id: id }).then(
-			(response) => {
-				setlistEmpregados(
-					listEmpregados.map((val) => {
-						return val.id == id
-							? {
-									id: val.id,
-									nome: val.novoNome,
-									salario: val.salario,
-									dept: val.dept,
-							  }
-							: val
-					}),
-				)
-			},
-		)
+		Axios.put('http://localhost:3001/update', { nome: novoNome, id: id })
 	}
-	/* const deleteFunc = (id) => {
-		Axios.delete(`http://localhost:3001/delete/${id}`)
-	} */
+
+	const deleteFunc = (id) => {
+		console.log(id)
+		Axios.delete(`http://localhost:3001/delete/${id}`).then((response) => {
+			setlistEmpregados(
+				listEmpregados.filter((val) => {
+					return val.id == id
+				}),
+			)
+		})
+	}
 	return (
 		<div className="App">
 			<div className="info">
@@ -119,8 +112,10 @@ function App() {
 										setNovoNome(event.target.value)
 									}}
 								/>
+
 								<button onClick={() => updateFuncNome(val.id)}>Uptdate</button>
-								{/* <button onClick={deleteFunc(val.id)}>Excluir</button> */}
+
+								<button onClick={deleteFunc(val.id)}>Excluir</button>
 							</div>
 						</div>
 					)
