@@ -36,14 +36,15 @@ function App() {
 	}
 	const updateFuncNome = (id) => {
 		Axios.put('http://localhost:3001/update', { nome: novoNome, id: id })
+		console.log('updated')
 	}
 
-	const deleteFunc = (id) => {
+	const deleteFuncionario = (id) => {
 		console.log(id)
 		Axios.delete(`http://localhost:3001/delete/${id}`).then((response) => {
 			setlistEmpregados(
 				listEmpregados.filter((val) => {
-					return val.id == id
+					return val.id != id
 				}),
 			)
 		})
@@ -107,15 +108,27 @@ function App() {
 							<div>
 								<input
 									type="text"
-									placeholder="200"
+									placeholder="2000..."
 									onChange={(event) => {
 										setNovoNome(event.target.value)
 									}}
 								/>
 
-								<button onClick={() => updateFuncNome(val.id)}>Uptdate</button>
+								<button
+									onClick={() => {
+										updateFuncNome(val.id)
+									}}
+								>
+									Update
+								</button>
 
-								<button onClick={deleteFunc(val.id)}>Excluir</button>
+								<button
+									onClick={() => {
+										deleteFuncionario(val.id)
+									}}
+								>
+									Excluir
+								</button>
 							</div>
 						</div>
 					)
