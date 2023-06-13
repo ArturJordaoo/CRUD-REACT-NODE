@@ -1,28 +1,28 @@
 const express = require('express')
 const app = express()
-const mysql = require('mysql')
+const { Pool } = require('pg')
 const cors = require('cors')
 
 app.use(cors())
 app.use(express.json())
 
-const db = mysql.createConnection({
-	user: 'root',
+const db = new Pool({
+	user: 'postgres',
 	host: 'localhost',
-	password: 'password',
+	password: 'krud123',
 	database: 'crudbd',
+	port: 5432,
 })
 
 app.post('/create', (req, res) => {
 	console.log(req.body)
-	const id = req.body.id
 	const nome = req.body.nome
 	const funcao = req.body.funcao
 	const salario = req.body.salario
 	const dept = req.body.dept
 
 	db.query(
-		'INSERT INTO funcionario (nome, funcao, salario, dept) VALUES (?,?,?,?)',
+		'INSERT INTO funcionario (nome, funcao, salario, dept) VALUES ($1, $2, $3, $4)',
 		[nome, funcao, salario, dept],
 		(err, result) => {
 			if (err) {
@@ -30,7 +30,7 @@ app.post('/create', (req, res) => {
 			} else {
 				res.send('Values inserted')
 			}
-		},
+		}
 	)
 })
 
@@ -39,7 +39,7 @@ app.get('/funcionarios', (req, res) => {
 		if (err) {
 			console.log(err)
 		} else {
-			res.send(result)
+			res.send(result.rows)
 		}
 	})
 })
@@ -48,7 +48,7 @@ app.put('/update', (req, res) => {
 	const id = req.body.id
 	const nome = req.body.nome
 	db.query(
-		'UPDATE funcionario SET nome = ? WHERE id = ?',
+		'UPDATE funcionario SET nome = $1 WHERE id = $2',
 		[nome, id],
 		(err, result) => {
 			if (err) {
@@ -56,21 +56,21 @@ app.put('/update', (req, res) => {
 			} else {
 				res.send(result)
 			}
-		},
+		}
 	)
 })
+
 app.delete('/delete/:id', (req, res) => {
 	let id = req.params.id
-	db.query('DELETE FROM funcionario WHERE id = ?', id, (err, result) => {
+	db.query('DELETE FROM funcionario WHERE id = $1', [id], (err, result) => {
 		if (err) {
 			console.log(err)
 		} else {
-			res.send(result)
+			res.send(result.rows)
 		}
 	})
-}) 
-
+})
 
 app.listen(3001, () => {
-	console.log('listening on port 3001')
+	console.log('Listening on port 3001')
 })
